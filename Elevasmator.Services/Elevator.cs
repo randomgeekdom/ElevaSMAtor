@@ -8,9 +8,9 @@ namespace Elevasmator.Services
 
         public Elevator()
         {
-            for (int i = 0; i < NumberOfFloors; i++)
+            for (int i = 1; i < NumberOfFloors; i++)
             {
-                this.buttonPresses.TryAdd(1, false);
+                this.buttonPresses.TryAdd(i, false);
             }
         }
 

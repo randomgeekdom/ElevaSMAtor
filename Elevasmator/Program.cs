@@ -12,6 +12,7 @@ namespace Elevasmator
                 .ConfigureServices(
                     (_, services) => services
                         .AddTransient<ElevatorOperationService>()
+                        .AddTransient<ILogger, FileLogger>()
                         .AddSingleton<IElevatorService, ElevatorService>());
         }
 
@@ -44,8 +45,8 @@ namespace Elevasmator
 
                 if(input != null)
                 {
-                    var firstCharacter = input.FirstOrDefault();
-                    if (int.TryParse(firstCharacter.ToString(), out var number))
+                    var numberString = new string(input.Where(x => char.IsNumber(x)).ToArray());
+                    if (int.TryParse(numberString, out var number))
                     {
                         elevatorService.PressButton(elevator, number);
                     }
