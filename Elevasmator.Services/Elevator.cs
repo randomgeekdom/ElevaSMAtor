@@ -6,35 +6,21 @@ namespace Elevasmator.Services
     {
         private readonly ConcurrentDictionary<int, bool> buttonPresses = new();
 
-        public Elevator()
+        public Elevator() : this(25)
         {
-            for (int i = 1; i < NumberOfFloors; i++)
+        }
+
+        public Elevator(int numberOfFloors)
+        {
+            this.NumberOfFloors = numberOfFloors;
+            for (int i = 1; i < numberOfFloors; i++)
             {
                 this.buttonPresses.TryAdd(i, false);
             }
         }
 
-        public int NumberOfFloors => 25;
+        public int NumberOfFloors { get; }
 
-        public bool ArriveAtFloor(int floor)
-        {
-            return ChangeButtonState(floor, false);
-        }
-
-        public bool ShouldStopAtFloor(int floor)
-        {
-            this.buttonPresses.TryGetValue(floor, out var result);
-            return result;
-        }
-
-        public IEnumerable<int> GetButtonsPressed()
-        {
-            return this.buttonPresses.Where(x => x.Value).Select(x => x.Key);
-        }
-
-        public bool ChangeButtonState(int floor, bool state)
-        {
-            return buttonPresses.TryUpdate(floor, state, !state);
-        }
+        public ConcurrentDictionary<int, bool> ButtonPresses => buttonPresses;
     }
 }

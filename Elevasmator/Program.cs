@@ -18,6 +18,8 @@ namespace Elevasmator
                     (_, services) => services
                         .AddTransient<ElevatorOperationService>()
                         .AddTransient<ILogger, FileLogger>()
+                        .AddTransient<IElevatorFactory, ElevatorFactory>()
+                        .AddTransient<IElevatorMovementService, ElevatorMovementService>()
                         .AddSingleton<IElevatorService, ElevatorService>());
         }
 
@@ -26,10 +28,11 @@ namespace Elevasmator
             var host = CreateHostBuilder(args).Build();
             var operationService = host.Services.GetRequiredService<ElevatorOperationService>();
             var elevatorService = host.Services.GetRequiredService<IElevatorService>();
+            var elevatorFactory = host.Services.GetRequiredService<IElevatorFactory>();
 
             var tokenSource = new CancellationTokenSource();
 
-            var elevator = new Elevator();
+            var elevator = elevatorFactory.Create();
             var sensor = new Sensor();
 
             Task.Factory.StartNew(() => operationService.StartupElevator(elevator, sensor, tokenSource.Token));

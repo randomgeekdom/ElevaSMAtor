@@ -2,6 +2,4 @@ weight limit
 
 Separate external and internal buttons
 
-configure number of floors (minimum 3, max 1000)
-
 unit tests
