@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace Elevasmator.Services
+namespace Elevasmator.Services.Models
 {
     public class Elevator
     {
@@ -12,10 +12,10 @@ namespace Elevasmator.Services
 
         public Elevator(int numberOfFloors)
         {
-            this.NumberOfFloors = numberOfFloors;
+            NumberOfFloors = numberOfFloors;
             for (int i = 1; i < numberOfFloors; i++)
             {
-                this.buttonPresses.TryAdd(i, false);
+                buttonPresses.TryAdd(i, false);
             }
         }
 

@@ -1,4 +1,6 @@
-﻿namespace Elevasmator.Services
+﻿using Elevasmator.Services.Models;
+
+namespace Elevasmator.Services
 {
     public interface IElevatorService
     {
