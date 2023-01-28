@@ -4,9 +4,7 @@ namespace Elevasmator.Services
 {
     public class Elevator
     {
-        const int NumberOfFloors = 25;
-        private Sensor Sensor { get; } = new Sensor();
-        private readonly ConcurrentDictionary<int, bool> buttonPresses = new ();
+        private readonly ConcurrentDictionary<int, bool> buttonPresses = new();
 
         public Elevator()
         {
@@ -16,14 +14,32 @@ namespace Elevasmator.Services
             }
         }
 
-        public void PressButton(int floor)
+        public int NumberOfFloors => 25;
+
+        public bool ArriveAtFloor(int floor)
         {
-            buttonPresses[floor] = true;
+            return ChangeButtonState(floor, false);
         }
 
-        public void ArriveAtFloor(int floor)
+        public bool ShouldStopAtFloor(int floor)
         {
-            buttonPresses[floor] = false;
+            this.buttonPresses.TryGetValue(floor, out var result);
+            return result;
+        }
+
+        public IEnumerable<int> GetButtonsPressed()
+        {
+            return this.buttonPresses.Where(x => x.Value).Select(x => x.Key);
+        }
+
+        public bool PressButton(int floor)
+        {
+            return ChangeButtonState(floor, true);
+        }
+
+        private bool ChangeButtonState(int floor, bool state)
+        {
+            return buttonPresses.TryUpdate(floor, state, !state);
         }
     }
 }
