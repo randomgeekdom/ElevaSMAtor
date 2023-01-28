@@ -32,12 +32,7 @@ namespace Elevasmator.Services
             return this.buttonPresses.Where(x => x.Value).Select(x => x.Key);
         }
 
-        public bool PressButton(int floor)
-        {
-            return ChangeButtonState(floor, true);
-        }
-
-        private bool ChangeButtonState(int floor, bool state)
+        public bool ChangeButtonState(int floor, bool state)
         {
             return buttonPresses.TryUpdate(floor, state, !state);
         }

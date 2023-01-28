@@ -9,12 +9,7 @@
             this.elevatorService = elevatorService;
         }
 
-        public Task StartupElevator(Elevator elevator, Sensor sensor, CancellationToken token)
-        {
-            return OperateElevator(elevator, sensor, token);
-        }
-
-        private async Task OperateElevator(Elevator elevator, Sensor sensor, CancellationToken token)
+        public async Task StartupElevator(Elevator elevator, Sensor sensor, CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {

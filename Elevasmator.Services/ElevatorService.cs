@@ -37,6 +37,16 @@
             }
         }
 
+        public bool PressButton(Elevator elevator, int floor)
+        {
+            if(floor >= 1 && floor <= elevator.NumberOfFloors)
+            {
+                return elevator.ChangeButtonState(floor, true);
+            }
+
+            return false;
+        }
+
         private async Task StopAsync(Elevator elevator, Sensor sensor, CancellationToken token)
         {
             sensor.IsMoving = false;
