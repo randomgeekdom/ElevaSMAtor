@@ -1,18 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace Elevasmator.Services
 {
     public class FileLogger : ILogger
     {
         private readonly string fileName;
+        private readonly string? directory;
 
-        public FileLogger()
+        public FileLogger(IConfiguration configuration)
         {
-            this.fileName = $"C:\\logs\\{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}.log";
+            this.directory = configuration["LogFilePath"];
+            this.fileName = Path.Combine(this.directory, $"{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}.log");
+        }
+
+        public bool TestFilePath()
+        {
+            if (Directory.Exists(this.directory))
+            {
+                if (!File.Exists(this.fileName))
+                {
+                    File.Create(this.fileName);
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         public void Write(string log)
