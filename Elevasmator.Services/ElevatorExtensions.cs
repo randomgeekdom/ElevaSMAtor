@@ -9,9 +9,16 @@ namespace Elevasmator.Services
 {
     public static class Extensions
     {
-        public static bool ChangeButtonState(this Elevator elevator, int floor, bool state)
+        public static void ChangeButtonState(this Elevator elevator, int floor, bool state, ButtonType buttonType)
         {
-            return elevator.ButtonPresses.TryUpdate(floor, state, !state);
+            elevator.ButtonPresses[buttonType].TryUpdate(floor, state, !state);
+        }
+
+        public static void ChangeAllButtonStates(this Elevator elevator, int floor, bool state)
+        {
+            elevator.ButtonPresses[ButtonType.Internal].TryUpdate(floor, state, !state);
+            elevator.ButtonPresses[ButtonType.ExternalDown].TryUpdate(floor, state, !state);
+            elevator.ButtonPresses[ButtonType.ExternalUp].TryUpdate(floor, state, !state);
         }
 
         public static void ChangeDirection(this Sensor sensor)

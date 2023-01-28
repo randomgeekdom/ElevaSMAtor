@@ -1,4 +1,5 @@
 ﻿using Elevasmator.Services;
+using Elevasmator.Services.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -55,10 +56,21 @@ namespace Elevasmator
 
                     if (input != null)
                     {
-                        var numberString = new string(input.Where(x => char.IsNumber(x)).ToArray());
-                        if (int.TryParse(numberString, out var number))
+                        var buttonType = ButtonType.Internal;
+                        if (input.EndsWith("u"))
                         {
-                            elevatorService.PressButton(elevator, number);
+                            buttonType = ButtonType.ExternalUp;
+                            input = input.Substring(0, input.Length - 1);
+                        }
+                        else if (input.EndsWith("d"))
+                        {
+                            buttonType = ButtonType.ExternalDown;
+                            input = input.Substring(0, input.Length - 1);
+                        }
+
+                        if (int.TryParse(input, out var number))
+                        {
+                            elevatorService.PressButton(elevator, number, buttonType);
                             continue;
                         }
                     }

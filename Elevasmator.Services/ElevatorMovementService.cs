@@ -41,9 +41,11 @@ namespace Elevasmator.Services
             await Task.Delay(TimeSpan.FromSeconds(1), token);
         }
 
-        private bool ArriveAtFloor(Elevator elevator, int floor)
+        private void ArriveAtFloor(Elevator elevator, int floor)
         {
-            return elevator.ChangeButtonState(floor, false);
+            elevator.ChangeButtonState(floor, false, ButtonType.Internal);
+            elevator.ChangeButtonState(floor, false, ButtonType.ExternalUp);
+            elevator.ChangeButtonState(floor, false, ButtonType.ExternalDown);
         }
     }
 }

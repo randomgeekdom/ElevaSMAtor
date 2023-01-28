@@ -51,21 +51,31 @@ namespace Elevasmator.Services
             }
         }
 
-        public bool PressButton(Elevator elevator, int floor)
+        public void PressButton(Elevator elevator, int floor, ButtonType buttonType)
         {
             if (floor >= 1 && floor <= elevator.NumberOfFloors)
             {
-                var result = elevator.ChangeButtonState(floor, true);
-                this.logger.Write($"Button pressed for floor {floor}");
-                return result;
-            }
+                elevator.ChangeButtonState(floor, true, buttonType);
 
-            return false;
+                var buttonLocationText = buttonType == ButtonType.Internal ? "Inside" : "Outside";
+                var logText = $"{buttonLocationText} button pressed for floor {floor}.";
+
+                if(buttonType == ButtonType.ExternalUp)
+                {
+                    logText += " Going UP.";
+                }
+                else if(buttonType == ButtonType.ExternalDown)
+                {
+                    logText += " Going DOWN.";
+                }
+
+                this.logger.Write(logText);
+            }
         }
 
         private IEnumerable<int> GetButtonsPressed(Elevator elevator)
         {
-            return elevator.ButtonPresses.Where(x => x.Value).Select(x => x.Key);
+            return elevator.ButtonPresses.SelectMany(x => x.Value).Where(x => x.Value).Select(x => x.Key).Distinct();
         }
 
     }

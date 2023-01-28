@@ -1,5 +1,3 @@
 weight limit
 
-Separate external and internal buttons
-
 unit tests
