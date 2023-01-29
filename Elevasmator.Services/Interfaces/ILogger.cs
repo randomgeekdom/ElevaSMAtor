@@ -1,10 +1,17 @@
-﻿namespace Elevasmator.Services
+﻿using Elevasmator.Services.Models;
+
+namespace Elevasmator.Services
 {
     public interface ILogger
     {
-        void Write(string log);
-        void WriteFloorStop(int floor);
-        void WriteFloorPass(int floor);
         bool TestFilePath();
+
+        void Write(string log);
+
+        void WriteButtonPress(int floor, ButtonType buttonType);
+
+        void WriteFloorPass(int floor);
+
+        void WriteFloorStop(int floor);
     }
 }

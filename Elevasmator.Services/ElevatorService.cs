@@ -56,20 +56,7 @@ namespace Elevasmator.Services
             if (floor >= 1 && floor <= elevator.NumberOfFloors)
             {
                 elevator.ChangeButtonState(floor, true, buttonType);
-
-                var buttonLocationText = buttonType == ButtonType.Internal ? "Inside" : "Outside";
-                var logText = $"{buttonLocationText} button pressed for floor {floor}.";
-
-                if(buttonType == ButtonType.ExternalUp)
-                {
-                    logText += " Going UP.";
-                }
-                else if(buttonType == ButtonType.ExternalDown)
-                {
-                    logText += " Going DOWN.";
-                }
-
-                this.logger.Write(logText);
+                this.logger.WriteButtonPress(floor, buttonType);
             }
         }
 

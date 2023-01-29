@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Elevasmator.Services.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace Elevasmator.Services
 {
@@ -35,6 +36,23 @@ namespace Elevasmator.Services
             {
                 File.AppendAllText(this.fileName, $"{DateTime.Now}: {log} \r\n");
             }
+        }
+
+        public void WriteButtonPress(int floor, ButtonType buttonType)
+        {
+            var buttonLocationText = buttonType == ButtonType.Internal ? "Inside" : "Outside";
+            var logText = $"{buttonLocationText} button pressed for floor {floor}.";
+
+            if (buttonType == ButtonType.ExternalUp)
+            {
+                logText += " Going UP.";
+            }
+            else if (buttonType == ButtonType.ExternalDown)
+            {
+                logText += " Going DOWN.";
+            }
+
+            this.Write(logText);
         }
 
         public void WriteFloorPass(int floor)
