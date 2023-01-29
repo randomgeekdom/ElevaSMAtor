@@ -10,21 +10,16 @@ namespace Elevasmator.Services
 {
     public class ElevatorFactory : IElevatorFactory
     {
-        private readonly IConfiguration configuration;
+        private readonly IConfigurationService configurationService;
 
-        public ElevatorFactory(IConfiguration configuration)
+        public ElevatorFactory(IConfigurationService configurationService)
         {
-            this.configuration = configuration;
+            this.configurationService = configurationService;
         }
 
         public Elevator Create()
         {
-            if (!int.TryParse(this.configuration["NumberOfFloors"], out var numberOfFloors) || numberOfFloors < 3 || numberOfFloors > 1000)
-            {
-                numberOfFloors = 25;
-            }
-
-            return new Elevator(numberOfFloors);
+            return new Elevator(this.configurationService.NumberOfFloors);
         }
     }
 }

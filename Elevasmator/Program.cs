@@ -1,4 +1,5 @@
 ﻿using Elevasmator.Services;
+using Elevasmator.Services.Interfaces;
 using Elevasmator.Services.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,8 @@ namespace Elevasmator
                         .AddTransient<ILogger, FileLogger>()
                         .AddTransient<IElevatorFactory, ElevatorFactory>()
                         .AddTransient<IElevatorMovementService, ElevatorMovementService>()
+                        .AddTransient<IConfigurationService, ConfigurationService>()
+                        .AddTransient<IDelayService, DelayService>()
                         .AddSingleton<IElevatorService, ElevatorService>());
         }
 
@@ -39,6 +42,12 @@ namespace Elevasmator
             Task.Factory.StartNew(() => operationService.StartupElevator(elevator, sensor, tokenSource.Token));
 
             var logger = host.Services.GetRequiredService<ILogger>();
+            RunApplication(elevatorService, tokenSource, elevator, logger);
+
+        }
+
+        private static void RunApplication(IElevatorService elevatorService, CancellationTokenSource tokenSource, Elevator elevator, ILogger logger)
+        {
             if (logger.TestFilePath())
             {
                 while (true)
@@ -82,7 +91,6 @@ namespace Elevasmator
             {
                 Console.WriteLine("Invalid configured file path");
             }
-            
         }
     }
 }

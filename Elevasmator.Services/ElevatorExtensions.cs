@@ -25,5 +25,12 @@ namespace Elevasmator.Services
         {
             sensor.IsGoingUp = !sensor.IsGoingUp;
         }
+
+        public static void ArriveAtFloor(this Elevator elevator, int floor)
+        {
+            elevator.ChangeButtonState(floor, false, ButtonType.Internal);
+            elevator.ChangeButtonState(floor, false, ButtonType.ExternalUp);
+            elevator.ChangeButtonState(floor, false, ButtonType.ExternalDown);
+        }
     }
 }

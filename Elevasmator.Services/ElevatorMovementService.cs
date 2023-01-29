@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Elevasmator.Services.Interfaces;
 using Elevasmator.Services.Models;
 
 namespace Elevasmator.Services
@@ -10,10 +11,12 @@ namespace Elevasmator.Services
     public class ElevatorMovementService : IElevatorMovementService
     {
         private readonly ILogger logger;
+        private readonly IDelayService delayService;
 
-        public ElevatorMovementService(ILogger logger)
+        public ElevatorMovementService(ILogger logger, IDelayService delayService)
         {
             this.logger = logger;
+            this.delayService = delayService;
         }
 
         public async Task MoveAsync(Elevator elevator, Sensor sensor, IEnumerable<int> buttonsPressed, CancellationToken token)
@@ -21,31 +24,24 @@ namespace Elevasmator.Services
             // Start moving toward the next floor
             sensor.IsMoving = true;
             sensor.CurrentOrNextFloor += (sensor.IsGoingUp ? 1 : -1);
-            await Task.Delay(TimeSpan.FromSeconds(3), token);
+            await this.delayService.DelayAsync(3, token);
 
             if (buttonsPressed.Contains(sensor.CurrentOrNextFloor))
             {
-                this.logger.Write($"Stopping at floor {sensor.CurrentOrNextFloor}");
+                this.logger.WriteFloorStop(sensor.CurrentOrNextFloor);
                 await this.StopAsync(elevator, sensor, token);
             }
             else
             {
-                this.logger.Write($"Passing floor {sensor.CurrentOrNextFloor}");
+                this.logger.WriteFloorPass(sensor.CurrentOrNextFloor);
             }
         }
 
         public async Task StopAsync(Elevator elevator, Sensor sensor, CancellationToken token)
         {
             sensor.IsMoving = false;
-            ArriveAtFloor(elevator, sensor.CurrentOrNextFloor);
-            await Task.Delay(TimeSpan.FromSeconds(1), token);
-        }
-
-        private void ArriveAtFloor(Elevator elevator, int floor)
-        {
-            elevator.ChangeButtonState(floor, false, ButtonType.Internal);
-            elevator.ChangeButtonState(floor, false, ButtonType.ExternalUp);
-            elevator.ChangeButtonState(floor, false, ButtonType.ExternalDown);
+            elevator.ArriveAtFloor(sensor.CurrentOrNextFloor);
+            await this.delayService.DelayAsync(1, token);
         }
     }
 }

@@ -4,8 +4,9 @@ namespace Elevasmator.Services
 {
     public class FileLogger : ILogger
     {
-        private readonly string fileName;
+        private static object lockObject = new object();
         private readonly string? directory;
+        private readonly string fileName;
 
         public FileLogger(IConfiguration configuration)
         {
@@ -30,7 +31,20 @@ namespace Elevasmator.Services
 
         public void Write(string log)
         {
-            File.AppendAllText(this.fileName, $"{DateTime.Now}: {log} \r\n");
+            lock (lockObject)
+            {
+                File.AppendAllText(this.fileName, $"{DateTime.Now}: {log} \r\n");
+            }
+        }
+
+        public void WriteFloorPass(int floor)
+        {
+            this.Write($"Passing floor {floor}");
+        }
+
+        public void WriteFloorStop(int floor)
+        {
+            this.Write($"Stopping at floor {floor}");
         }
     }
 }

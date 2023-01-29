@@ -18,7 +18,7 @@ namespace Elevasmator.Services.Models
             buttonPresses.TryAdd(ButtonType.ExternalDown, new ConcurrentDictionary<int, bool>());
             buttonPresses.TryAdd(ButtonType.ExternalUp, new ConcurrentDictionary<int, bool>());
 
-            for (int i = 1; i < numberOfFloors; i++)
+            for (int i = 1; i <= numberOfFloors; i++)
             {
                 buttonPresses[ButtonType.Internal].TryAdd(i, false);
                 buttonPresses[ButtonType.ExternalDown].TryAdd(i, false);
